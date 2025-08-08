@@ -1,8 +1,8 @@
 import { pathToFileURL } from "url";
-import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+// import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import builtins from "builtin-modules";
-import UnoCSS from "unocss/vite";
-import { PluginOption, defineConfig } from "vite";
+// import UnoCSS from "unocss/vite";
+import { defineConfig } from "vite";
 
 const setOutDir = (mode: string) => {
     switch (mode) {
@@ -15,10 +15,10 @@ const setOutDir = (mode: string) => {
 
 export default defineConfig(({ mode }) => {
     return {
-        plugins: [
-            UnoCSS(),
-            svelte({ preprocess: vitePreprocess() }) as PluginOption,
-        ],
+        // plugins: [
+        //     UnoCSS(),
+        //     svelte({ preprocess: vitePreprocess() }) as PluginOption,
+        // ],
         build: {
             lib: {
                 entry: "src/main",

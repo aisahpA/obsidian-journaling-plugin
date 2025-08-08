@@ -1,10 +1,10 @@
 import JournalingPlugin from "./main";
-import Header from "./components/Header.svelte";
+// import Header from ".   /components/Header.svelte";
 import { App, PluginSettingTab, Setting } from "obsidian";
 
 export class JournalingSettingTab extends PluginSettingTab {
     plugin: JournalingPlugin;
-    component!: Header;
+    // component!: Header;
 
     constructor(app: App, plugin: JournalingPlugin) {
         super(app, plugin);
@@ -84,27 +84,9 @@ export class JournalingSettingTab extends PluginSettingTab {
                     }),
             );
 
-        new Setting(containerEl)
-            .setName("Update Interval")
-            .setDesc(
-                "Set the interval at which the plugin scans the directories for changes. The interval is specified in seconds.",
-            )
-            .addText((text) =>
-                text
-                    .setPlaceholder("Interval in seconds, e.g.: 10")
-                    .setValue(this.plugin.settings.updateInterval.toString())
-                    .onChange(async (value) => {
-                        this.plugin.settings.updateInterval = parseInt(
-                            value,
-                            10,
-                        );
-                        await this.plugin.saveSettings();
-                    }),
-            );
-
-        this.component = new Header({
-            target: this.containerEl,
-        });
+        // this.component = new Header({
+        //     target: this.containerEl,
+        // });
 
     }
 }

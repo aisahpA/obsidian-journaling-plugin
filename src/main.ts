@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { JournalingSettingTab } from "./settings";
-import "virtual:uno.css";
+// import "virtual:uno.css";
 import journalingView from "./scripts/JournalingView";
 
 interface JournalingPluginSettings {
@@ -8,7 +8,6 @@ interface JournalingPluginSettings {
     paths: string;
     fileName: string;
     filterValue: string;
-    updateInterval: number;
 }
 
 const DEFAULT_SETTINGS: Partial<JournalingPluginSettings> = {
@@ -16,12 +15,10 @@ const DEFAULT_SETTINGS: Partial<JournalingPluginSettings> = {
     paths: "",
     fileName: "Journaling.md",
     filterValue: "new",
-    updateInterval: 15,
 };
 
 export default class JournalingPlugin extends Plugin {
     settings!: JournalingPluginSettings;
-    private intervalId: number | null = null;
 
     async loadSettings() {
         this.settings = Object.assign(
@@ -33,9 +30,6 @@ export default class JournalingPlugin extends Plugin {
 
     async saveSettings() {
         await this.saveData(this.settings);
-
-        if (this.intervalId) window.clearInterval(this.intervalId);
-        this.intervalId = await journalingView(this.app, this);
     }
 
     async onload() {
@@ -43,12 +37,12 @@ export default class JournalingPlugin extends Plugin {
 
         this.addSettingTab(new JournalingSettingTab(this.app, this));
 
-        if (this.intervalId) window.clearInterval(this.intervalId);
-        this.intervalId = await journalingView(this.app, this);
+        this.addRibbonIcon('scroll-text', '汇总日记', async () => {
+            await journalingView(this);
+        });
     }
 
     onunload() {
-        if (this.intervalId) window.clearInterval(this.intervalId);
         console.log("unloading plugin");
     }
 }
