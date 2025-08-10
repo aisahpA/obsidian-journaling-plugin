@@ -41,13 +41,25 @@ async function writeContentForAll(app: App,
                                   files: TFile[]) {
     try {
         // 重新生成文件
-        // ---
-        // ![[Calendar/Notes/Daily/2025-08-07.md]]
+        let yearTitle = "YYYY";
+        let yearMonthTitle = "YYYY-MM";
         const content = files.reduce((acc, file) => {
+            // 添加年标题
+            if (!file.basename.startsWith(yearTitle)) {
+                yearTitle = file.basename.substring(0, 4);
+                acc += `\n# ${yearTitle}`;
+            }
+            // 添加年月标题
+            if (!file.basename.startsWith(yearMonthTitle)) {
+                yearMonthTitle = file.basename.substring(0, 7);
+                acc += `\n## ${yearMonthTitle}`;
+            }
+            // 添加每日文件
             return acc
                 + '\n---\n'
                 + `![[${file.path}]]\n`;
         }, "");
+
         await app.vault.modify(targetFile, content);
     } catch (error) {
         console.error(`Failed to write journaling file: ${targetFile.path}`, error,);
@@ -64,14 +76,14 @@ function sortFiles(files: TFile[],
         // 标准日期格式，直接字符串比较
         files.sort((a, b) => {
             return filterValue === "new"
-                ? b.name.localeCompare(a.name)
-                : a.name.localeCompare(b.name);
+                ? b.basename.localeCompare(a.basename)
+                : a.basename.localeCompare(b.basename);
         });
     } else {
         // 非标准日期，解析日期比较排序
         files.sort((a, b) => {
-            const dateA = moment.utc(a.basename, dateFormat);
-            const dateB = moment.utc(b.basename, dateFormat);
+            const dateA = moment.utc(a.basename, dateFormat, true);
+            const dateB = moment.utc(b.basename, dateFormat, true);
             return filterValue === "new"
                 ? dateB.diff(dateA)
                 : dateA.diff(dateB);
